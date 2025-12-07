@@ -1,0 +1,159 @@
+# Data Catalog for LSA-Markus Project
+# This file defines all data sources and sinks for the pipeline
+
+# Raw corpus data (2006-2015)
+corpus_2006_2015:
+  type: pandas.JSONDataset
+  filepath: data/01_raw/2006-2015.json
+  load_args:
+    orient: records
+
+# Raw corpus data (2016-2025)
+corpus_2016_2025:
+  type: pandas.JSONDataset
+  filepath: data/01_raw/2016~2025.json
+  load_args:
+    orient: records
+
+# Preprocessed text data
+preprocessed_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/02_intermediate/preprocessed_2006_2015.pkl
+
+preprocessed_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/02_intermediate/preprocessed_2016~2025.pkl
+
+# Combined corpus for comparison
+combined_corpus:
+  type: pickle.PickleDataset
+  filepath: data/02_intermediate/combined_corpus.pkl
+
+# TF-IDF matrices
+tfidf_matrix_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/tfidf_matrix_2006_2015.pkl
+
+tfidf_matrix_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/tfidf_matrix_2016~2025.pkl
+
+tfidf_vectorizer:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/tfidf_vectorizer.pkl
+
+# LSA Models and Results
+lsa_model_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/06_models/lsa_model_2006_2015.pkl
+
+lsa_model_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/06_models/lsa_model_2016~2025.pkl
+
+lsa_results_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/07_model_output/lsa_results_2006_2015.pkl
+
+lsa_results_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/07_model_output/lsa_results_2016~2025.pkl
+
+# LDA Models and Results
+lda_model_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/06_models/lda_model_2006_2015.pkl
+
+lda_model_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/06_models/lda_model_2016~2025.pkl
+
+lda_results_2006_2015:
+  type: pickle.PickleDataset
+  filepath: data/07_model_output/lda_results_2006_2015.pkl
+
+lda_results_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/07_model_output/lda_results_2016~2025.pkl
+
+# Visualization and reporting outputs
+# Note: MatplotlibWriter datasets commented out - not currently used in pipeline
+# Uncomment when adding visualization nodes
+# topic_visualization_lsa:
+#   type: matplotlib.MatplotlibWriter
+#   filepath: data/08_reporting/lsa_topic_visualization.png
+#
+# topic_visualization_lda:
+#   type: matplotlib.MatplotlibWriter
+#   filepath: data/08_reporting/lda_topic_visualization.png
+
+comparison_report:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/temporal_comparison_report.csv
+
+# Topic terms for interpretation
+lsa_topic_terms_2006_2015:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_topic_terms_2006_2015.csv
+
+lsa_topic_terms_2016_2025:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_topic_terms_2016~2025.csv
+
+lda_topic_terms_2006_2015:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lda_topic_terms_2006_2015.csv
+
+lda_topic_terms_2016_2025:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lda_topic_terms_2016~2025.csv
+
+# Additional intermediate datasets for LSA
+doc_topic_matrix_2006_2015:
+  type: MemoryDataset
+
+topic_term_matrix_2006_2015:
+  type: MemoryDataset
+
+doc_topic_matrix_2016_2025:
+  type: MemoryDataset
+
+topic_term_matrix_2016_2025:
+  type: MemoryDataset
+
+lsa_topic_comparison:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_topic_comparison.csv
+
+# Additional datasets for LDA
+doc_term_matrix_2006_2015:
+  type: MemoryDataset
+
+count_vectorizer_2006_2015:
+  type: MemoryDataset
+
+doc_term_matrix_2016_2025:
+  type: MemoryDataset
+
+count_vectorizer_2016_2025:
+  type: MemoryDataset
+
+lda_doc_topic_matrix_2006_2015:
+  type: MemoryDataset
+
+lda_topic_term_matrix_2006_2015:
+  type: MemoryDataset
+
+lda_doc_topic_matrix_2016_2025:
+  type: MemoryDataset
+
+lda_topic_term_matrix_2016_2025:
+  type: MemoryDataset
+
+lda_topic_comparison:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lda_topic_comparison.csv
+
+tfidf_vectorizer_2016_2025:
+  type: pickle.PickleDataset
+  filepath: data/03_primary/tfidf_vectorizer_2016_2025.pkl

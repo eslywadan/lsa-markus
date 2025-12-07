@@ -1,0 +1,52 @@
+# Parameters for LSA-Markus Project
+
+# Text preprocessing parameters
+preprocessing:
+  remove_stopwords: true
+  use_custom_stopwords: true
+  custom_stopwords_path: "conf/base/chinese_stopwords.txt"
+  min_word_length: 2
+  max_word_length: 10
+
+# TF-IDF parameters
+tfidf:
+  max_features: 1000
+  min_df: 2  # Minimum document frequency
+  max_df: 0.8  # Maximum document frequency (80%)
+  ngram_range: [1, 2]  # Unigrams and bigrams
+  use_idf: true
+  sublinear_tf: true
+
+# LSA (Latent Semantic Analysis) parameters
+lsa:
+  n_components: 10  # Number of topics/latent dimensions
+  algorithm: "randomized"  # or "arpack"
+  n_iter: 100
+  random_state: 42
+
+# LDA (Latent Dirichlet Allocation) parameters
+lda:
+  n_topics: 10  # Number of topics
+  max_iter: 100
+  learning_method: "online"  # or "batch"
+  random_state: 42
+  n_jobs: -1  # Use all CPUs
+  batch_size: 128
+  doc_topic_prior: null  # Auto (alpha)
+  topic_word_prior: null  # Auto (beta)
+
+# Topic interpretation parameters
+topic_interpretation:
+  n_top_words: 15  # Number of top words to display per topic
+
+# Visualization parameters
+visualization:
+  figsize: [12, 8]
+  dpi: 300
+  wordcloud_width: 800
+  wordcloud_height: 400
+  wordcloud_background: "white"
+
+# Comparison analysis parameters
+comparison:
+  similarity_threshold: 0.7  # Cosine similarity threshold for topic alignment
