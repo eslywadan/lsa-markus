@@ -19,14 +19,14 @@ tfidf:
 
 # LSA (Latent Semantic Analysis) parameters
 lsa:
-  n_components: 10  # Number of topics/latent dimensions
+  n_components: 4  # Number of topics/latent dimensions
   algorithm: "randomized"  # or "arpack"
   n_iter: 100
   random_state: 42
 
 # LDA (Latent Dirichlet Allocation) parameters
 lda:
-  n_topics: 10  # Number of topics
+  n_topics: 4  # Number of topics
   max_iter: 100
   learning_method: "online"  # or "batch"
   random_state: 42
@@ -50,3 +50,7 @@ visualization:
 # Comparison analysis parameters
 comparison:
   similarity_threshold: 0.7  # Cosine similarity threshold for topic alignment
+
+# Document similarity parameters (for LSA cosine similarity)
+similarity:
+  top_k: 5  # Number of most similar documents to find for each document

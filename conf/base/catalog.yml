@@ -125,6 +125,23 @@ lsa_topic_comparison:
   type: pandas.CSVDataset
   filepath: data/08_reporting/lsa_topic_comparison.csv
 
+# LSA Document Similarity Results (Cosine Similarity)
+lsa_pairwise_similarities_2006_2015:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_pairwise_similarities_2006_2015.csv
+
+lsa_pairwise_similarities_2016_2025:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_pairwise_similarities_2016_2025.csv
+
+lsa_similar_documents_2006_2015:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_similar_documents_2006_2015.csv
+
+lsa_similar_documents_2016_2025:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/lsa_similar_documents_2016_2025.csv
+
 # Additional datasets for LDA
 doc_term_matrix_2006_2015:
   type: MemoryDataset

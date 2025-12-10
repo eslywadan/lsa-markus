@@ -144,9 +144,9 @@ kedro jupyter notebook
 
 ---
 
-## ✅ Best Practices (From Your Analysis)
+## ✅ Best Practices (From The Analysis)
 
-### Your Topic Selection Methodology is VALID because:
+### The Topic Selection Methodology is VALID because:
 
 1. ✅ **Clear domain context**: All articles about Jianshi Township
 2. ✅ **Shared background**: Indigenous culture and local government appear consistently
@@ -197,3 +197,31 @@ Need to select topics for interpretation?
 **Last Updated**: 2025-12-08
 **Validated Periods**: 2006-2015, 2016-2025
 **Validation Tool**: `src/analyze_topic_selection.py`
+
+---
+
+## 🆕 LSA vs LDA Comparison
+
+### Quick Links:
+- **Full Comparison**: [LSA_vs_LDA_COMPARISON.md](LSA_vs_LDA_COMPARISON.md) - Comprehensive algorithmic & pipeline comparison
+- **Quick Summary**: [LSA_LDA_QUICK_SUMMARY.md](LSA_LDA_QUICK_SUMMARY.md) - One-page comparison
+- **Pipeline Flow**: [PIPELINE_FLOW_COMPARISON.md](PIPELINE_FLOW_COMPARISON.md) - Visual pipeline diagrams
+- **LDA Inference Method**: [LDA_INFERENCE_METHOD.md](LDA_INFERENCE_METHOD.md) - Detailed explanation of SVI vs EM vs Gibbs Sampling
+
+### One-Sentence Difference:
+**LSA** finds what makes documents **different** (discriminative patterns via variance).
+**LDA** finds what documents **contain** (content themes via probabilities).
+
+### Key Algorithmic Difference:
+**LSA**: Uses Truncated SVD on TF-IDF matrix (deterministic, linear algebra)
+**LDA**: Uses Stochastic Variational Inference on count matrix (probabilistic, Bayesian)
+
+**Your LDA Implementation**: Uses `learning_method='online'` → Stochastic Variational Inference (SVI), NOT EM or Gibbs Sampling
+
+### Run Comparison:
+```bash
+python src/compare_lsa_lda.py
+```
+
+### Your Results:
+Both methods confirmed indigenous cultural context (部落, 泰雅族, 文化) as baseline, validating your corpus focus ✅

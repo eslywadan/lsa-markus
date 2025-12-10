@@ -80,6 +80,96 @@ def extract_topic_terms(
     return pd.DataFrame(topics_data)
 
 
+def calculate_pairwise_similarities(
+    doc_topic_matrix: np.ndarray,
+    preprocessed_df: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Calculate cosine similarity between all document pairs.
+
+    Args:
+        doc_topic_matrix: Document representations in topic space (n_docs × k)
+        preprocessed_df: Original preprocessed DataFrame
+
+    Returns:
+        DataFrame with pairwise document similarities
+    """
+    n_docs = doc_topic_matrix.shape[0]
+    similarity_matrix = np.zeros((n_docs, n_docs))
+
+    # Calculate pairwise cosine similarities
+    for i in range(n_docs):
+        for j in range(i, n_docs):
+            if i == j:
+                sim = 1.0  # Document is identical to itself
+            else:
+                sim = 1 - cosine(doc_topic_matrix[i], doc_topic_matrix[j])
+            similarity_matrix[i, j] = sim
+            similarity_matrix[j, i] = sim  # Symmetric matrix
+
+    # Create DataFrame with document titles as index/columns
+    titles = preprocessed_df['news_title'].values
+    dates = preprocessed_df['news_date'].values
+
+    # Create labels with date and title
+    labels = [f"{date} - {title[:50]}" for date, title in zip(dates, titles)]
+
+    similarity_df = pd.DataFrame(
+        similarity_matrix,
+        index=labels,
+        columns=labels
+    )
+
+    return similarity_df
+
+
+def find_similar_documents(
+    doc_topic_matrix: np.ndarray,
+    preprocessed_df: pd.DataFrame,
+    top_k: int = 5
+) -> pd.DataFrame:
+    """
+    Find top-k most similar documents for each document.
+
+    Args:
+        doc_topic_matrix: Document representations in topic space
+        preprocessed_df: Original preprocessed DataFrame
+        top_k: Number of similar documents to find for each document
+
+    Returns:
+        DataFrame with each document and its most similar documents
+    """
+    n_docs = doc_topic_matrix.shape[0]
+    titles = preprocessed_df['news_title'].values
+    dates = preprocessed_df['news_date'].values
+
+    results = []
+
+    for target_idx in range(n_docs):
+        target_vector = doc_topic_matrix[target_idx]
+
+        # Calculate similarities to all other documents
+        similarities = []
+        for i in range(n_docs):
+            if i != target_idx:
+                sim = 1 - cosine(target_vector, doc_topic_matrix[i])
+                similarities.append({
+                    'target_idx': target_idx,
+                    'target_date': dates[target_idx],
+                    'target_title': titles[target_idx],
+                    'similar_idx': i,
+                    'similar_date': dates[i],
+                    'similar_title': titles[i],
+                    'similarity': sim
+                })
+
+        # Sort by similarity (descending) and take top-k
+        similarities.sort(key=lambda x: x['similarity'], reverse=True)
+        results.extend(similarities[:top_k])
+
+    return pd.DataFrame(results)
+
+
 def calculate_document_similarities(
     doc_topic_matrix: np.ndarray,
     preprocessed_df: pd.DataFrame
@@ -114,7 +204,8 @@ def create_lsa_results(
     topic_term_matrix: np.ndarray,
     tfidf_matrix: pd.DataFrame,
     preprocessed_df: pd.DataFrame,
-    n_top_words: int = 15
+    n_top_words: int = 15,
+    similarity_top_k: int = 5
 ) -> Dict:
     """
     Create comprehensive LSA results dictionary.
@@ -126,17 +217,24 @@ def create_lsa_results(
         tfidf_matrix: Original TF-IDF matrix
         preprocessed_df: Preprocessed corpus DataFrame
         n_top_words: Number of top words per topic
+        similarity_top_k: Number of similar documents to find for each document
 
     Returns:
-        Dictionary containing all LSA results
+        Dictionary containing all LSA results including cosine similarities
     """
     feature_names = tfidf_matrix.columns.tolist()
 
     # Extract topic terms
     topic_terms_df = extract_topic_terms(lsa_model, feature_names, n_top_words)
 
-    # Calculate document similarities
+    # Calculate document topic distributions
     doc_topics_df = calculate_document_similarities(doc_topic_matrix, preprocessed_df)
+
+    # Calculate pairwise document similarities (Scenario 1)
+    pairwise_similarities_df = calculate_pairwise_similarities(doc_topic_matrix, preprocessed_df)
+
+    # Find similar documents for each document (Scenario 2)
+    similar_docs_df = find_similar_documents(doc_topic_matrix, preprocessed_df, similarity_top_k)
 
     # Calculate explained variance
     explained_variance = lsa_model.explained_variance_ratio_
@@ -149,10 +247,39 @@ def create_lsa_results(
         'doc_topics': doc_topics_df,
         'explained_variance': explained_variance,
         'total_variance_explained': explained_variance.sum(),
-        'feature_names': feature_names
+        'feature_names': feature_names,
+        # New: Cosine similarity results
+        'pairwise_similarities': pairwise_similarities_df,
+        'similar_documents': similar_docs_df
     }
 
     return results
+
+
+def extract_pairwise_similarities(lsa_results: Dict) -> pd.DataFrame:
+    """
+    Extract pairwise similarities DataFrame from LSA results.
+
+    Args:
+        lsa_results: Dictionary containing LSA results
+
+    Returns:
+        DataFrame with pairwise document similarities
+    """
+    return lsa_results['pairwise_similarities']
+
+
+def extract_similar_documents(lsa_results: Dict) -> pd.DataFrame:
+    """
+    Extract similar documents DataFrame from LSA results.
+
+    Args:
+        lsa_results: Dictionary containing LSA results
+
+    Returns:
+        DataFrame with top-k similar documents for each document
+    """
+    return lsa_results['similar_documents']
 
 
 def compare_time_periods(

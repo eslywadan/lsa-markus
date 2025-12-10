@@ -1,0 +1,5 @@
+Period,Method,N Topics,N Documents,N Terms,Metric 1,Metric 2,Weight Type,Interpretation
+2006-2015,LSA,10,13,254,Total Var: 84.14%,Top Topic Var: 1.22%,Real-valued (can be negative),Variance explained
+2006-2015,LDA,10,13,254,Perplexity: 319.25,Log-likelihood: -5247.04,Probabilities (0 to 1),Probability distributions
+2016-2025,LSA,10,12,297,Total Var: 88.70%,Top Topic Var: 1.82%,Real-valued (can be negative),Variance explained
+2016-2025,LDA,10,12,297,Perplexity: 407.33,Log-likelihood: -7043.28,Probabilities (0 to 1),Probability distributions
